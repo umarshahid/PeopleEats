@@ -77,16 +77,19 @@ public class CustomerForm {
 
     // Method to save order to database
     private void saveOrderToDatabase(Order order) {
+
         try {
             // Connect to the SQLite database
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:orders.db");
+//            Connection connection = DriverManager.getConnection("jdbc:sqlite:C:/Users/jhona/IdeaProjects/VIT Eats/src/orders.db");
+            Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db");
 
             // Create a PreparedStatement to insert the order into the database
-            String query = "INSERT INTO orders (customer, item, price) VALUES (?, ?, ?)";
+            String query = "INSERT INTO orders (customer, item, price, order_type) VALUES (?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, order.getUser().getUsername());
             preparedStatement.setString(2, order.getItems().get(0).getName()); // Assuming only one item for simplicity
             preparedStatement.setDouble(3, order.getItems().get(0).getPrice()); // Assuming only one item for simplicity
+            preparedStatement.setString(4, "DELIVERY"); // Assuming only one item for simplicity
 
             // Execute the PreparedStatement
             preparedStatement.executeUpdate();

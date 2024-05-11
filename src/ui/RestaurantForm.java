@@ -1,16 +1,22 @@
 package ui;
+
 import order.Order;
 import order.OrderType;
+import restaurant.MenuItems;
 import restaurant.Restaurant;
 import user.User;
 import user.UserType;
 
-import java.awt.*;
-import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
+// Restaurant UI form
 public class RestaurantForm {
     private JFrame frame;
     private JButton manageButton;
@@ -34,8 +40,8 @@ public class RestaurantForm {
         manageButton = new JButton("Manage Orders");
         manageButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // Fetch orders when the "Manage Orders" button is clicked
-                List<Order> orders = fetchOrdersFromDatabase(); // Example: Fetch orders from the database
+                // Fetch orders from the database when the "Manage Orders" button is clicked
+                List<Order> orders = fetchOrdersFromDatabase();
                 updateOrderTable(orders); // Update the order table with fetched orders
             }
         });
@@ -54,20 +60,37 @@ public class RestaurantForm {
         }
     }
 
-    // Method to fetch orders from the database (example)
+    // Method to fetch orders from the database
     private List<Order> fetchOrdersFromDatabase() {
-        // Replace this with your actual database fetch logic
-        // Example: Dummy data
-        return List.of(
-                new Order(new User("Customer1", "123456", UserType.CUSTOMER), new Restaurant("RestaurantA", "LocationA"), OrderType.DELIVERY),
-                new Order(new User("Customer2", "123456", UserType.CUSTOMER), new Restaurant("RestaurantB", "LocationB"), OrderType.PICKUP)
-        );
-    }
+        List<Order> orders = new ArrayList<>();
 
-    // Main method for testing
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new RestaurantForm(new Restaurant("MyRestaurant", "MyLocation"));
-        });
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db")) {
+            String query = "SELECT * FROM orders";
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(query)) {
+                while (resultSet.next()) {
+                    // Extract data from the ResultSet and create Order objects
+                    String username = resultSet.getString("customer");
+                    String itemName = resultSet.getString("item");
+                    double price = resultSet.getDouble("price");
+                    UserType userType = UserType.CUSTOMER; // Assuming all orders are for customers
+                    OrderType orderType = OrderType.valueOf(resultSet.getString("order_type")); // Assuming order_type column in database
+
+                    User user = new User(username, "dummyPassword", userType);
+                    Restaurant restaurant = new Restaurant("DummyRestaurant", "DummyLocation"); // You can fetch restaurant details if needed
+                    MenuItems menuItem = new MenuItems(itemName, price); // Create MenuItem object
+
+                    // Create Order object and add it to the list
+                    Order order = new Order(user, restaurant, orderType);
+                    order.addItem(menuItem);
+                    orders.add(order);
+                }
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(frame, "Error fetching orders from database!");
+        }
+
+        return orders;
     }
 }
