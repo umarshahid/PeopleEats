@@ -1,6 +1,7 @@
 package ui;
 
 import order.Order;
+import order.OrderState;
 import order.OrderType;
 import restaurant.MenuItems;
 import restaurant.Restaurant;
@@ -20,6 +21,7 @@ import java.util.List;
 public class RestaurantForm {
     private JFrame frame;
     private JButton manageButton;
+    private JButton orderReadyButton;
     private JTable orderTable;
     private DefaultTableModel tableModel;
 
@@ -32,7 +34,7 @@ public class RestaurantForm {
         panel.setLayout(new BorderLayout());
 
         // Create a table model for orders
-        tableModel = new DefaultTableModel(new Object[]{"Customer", "Items", "Type"}, 0);
+        tableModel = new DefaultTableModel(new Object[]{"Customer", "Items", "Price", "Type", "State"}, 0);
         orderTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(orderTable);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -47,6 +49,19 @@ public class RestaurantForm {
         });
         panel.add(manageButton, BorderLayout.SOUTH);
 
+        orderReadyButton = new JButton("Order Ready");
+        orderReadyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Get the selected row(s) from the table
+                int[] selectedRows = orderTable.getSelectedRows();
+
+                // Update the state of the selected order(s) in the database
+                updateOrderState(selectedRows);
+            }
+        });
+        panel.add(orderReadyButton, BorderLayout.NORTH);
+
         frame.add(panel);
         frame.setVisible(true);
     }
@@ -56,7 +71,41 @@ public class RestaurantForm {
         tableModel.setRowCount(0); // Clear existing rows
         for (Order order : orders) {
             // Add a row to the table for each order
-            tableModel.addRow(new Object[]{order.getUser().getUsername(), order.getItems(), order.getType()});
+            tableModel.addRow(new Object[]{order.getUser().getUsername(), order.getItems().get(0).getName(), order.getItems().get(0).getPrice(), order.getType(), order.getState()});
+        }
+    }
+
+    private void updateOrderState(int[] selectedRows) {
+        // Iterate over the selected rows and update the state of the corresponding orders in the database
+        for (int row : selectedRows) {
+            String username = (String) tableModel.getValueAt(row, 0); // Assuming the username is in the first column
+            String item = (String) tableModel.getValueAt(row, 1);
+
+
+            try (Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db")) {
+                // Construct the SQL update statement
+                String updateQuery = "UPDATE orders SET state = ? WHERE customer = ? AND item = ?";
+                try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+                    // Set the parameters for the update statement
+                    preparedStatement.setString(1, "READY"); // Update the state to "Ready"
+                    preparedStatement.setString(2, username);
+                    preparedStatement.setString(3, item);
+
+                    // Execute the update statement
+                    int rowsUpdated = preparedStatement.executeUpdate();
+                    if (rowsUpdated > 0) {
+                        System.out.println("Order state updated successfully.");
+                        // re-fetch table and populate
+                        List<Order> orders = fetchOrdersFromDatabase();
+                        updateOrderTable(orders);
+                    } else {
+                        System.out.println("Failed to update order state.");
+                    }
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+                JOptionPane.showMessageDialog(frame, "Error updating order state in database!");
+            }
         }
     }
 
@@ -73,6 +122,7 @@ public class RestaurantForm {
                     String username = resultSet.getString("customer");
                     String itemName = resultSet.getString("item");
                     double price = resultSet.getDouble("price");
+                    String orderState = resultSet.getString("state");
                     UserType userType = UserType.CUSTOMER; // Assuming all orders are for customers
                     OrderType orderType = OrderType.valueOf(resultSet.getString("order_type")); // Assuming order_type column in database
 
@@ -82,6 +132,8 @@ public class RestaurantForm {
 
                     // Create Order object and add it to the list
                     Order order = new Order(user, restaurant, orderType);
+                    OrderState state = (orderState.equals("PREPARING")) ? OrderState.PREPARING : OrderState.READY;
+                    order.setState(state);
                     order.addItem(menuItem);
                     orders.add(order);
                 }

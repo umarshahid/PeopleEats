@@ -81,9 +81,9 @@ public class Main {
         // Example: Launching UI forms for customer, restaurant, and rider
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new CustomerForm(customer);
-                new RestaurantForm(restaurant);
                 new RiderForm(rider);
+                new RestaurantForm(restaurant);
+                new CustomerForm(customer);
             }
         });
     }

@@ -1,6 +1,7 @@
 package ui;
 
 import order.Order;
+import order.OrderState;
 import order.OrderType;
 import restaurant.MenuItems;
 import restaurant.Restaurant;
@@ -57,6 +58,7 @@ public class CustomerForm {
                     // Example: Place order for customer
                     Restaurant restaurant = new Restaurant("Restaurant A", "Location A");
                     Order order = new Order(customer, restaurant, OrderType.DELIVERY);
+                    order.setState(OrderState.PREPARING);
                     order.addItem(new MenuItems(selectedFood, 10.0)); // Price is a placeholder
                     // Add more order handling logic as needed
 
@@ -84,12 +86,15 @@ public class CustomerForm {
             Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db");
 
             // Create a PreparedStatement to insert the order into the database
-            String query = "INSERT INTO orders (customer, item, price, order_type) VALUES (?, ?, ?, ?)";
+            String query = "INSERT INTO orders (customer, item, price, order_type, state) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, order.getUser().getUsername());
             preparedStatement.setString(2, order.getItems().get(0).getName()); // Assuming only one item for simplicity
             preparedStatement.setDouble(3, order.getItems().get(0).getPrice()); // Assuming only one item for simplicity
-            preparedStatement.setString(4, "DELIVERY"); // Assuming only one item for simplicity
+            String deliveryType = (order.getType() == OrderType.DELIVERY) ? "DELIVERY" : "NOT DELIVERY";
+            preparedStatement.setString(4, deliveryType); // Assuming only one item for simplicity
+            String orderState = (order.getState() == OrderState.PREPARING) ? "PREPARING" : "READY";
+            preparedStatement.setString(5, orderState); // Assuming only one item for simplicity
 
             // Execute the PreparedStatement
             preparedStatement.executeUpdate();

@@ -14,6 +14,7 @@ public class Order {
     private Restaurant restaurant;
     private List<MenuItems> items;
     private OrderType type;
+    private OrderState state;
     private String paymentMethod;
 
     public Order(User user, Restaurant restaurant, OrderType type) {
@@ -42,6 +43,14 @@ public class Order {
 
     public OrderType getType() {
         return type;
+    }
+
+    public OrderState getState() {
+        return state;
+    }
+
+    public void setState(OrderState state) {
+        this.state = state;
     }
 
     public double calculateTotal() {
