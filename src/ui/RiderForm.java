@@ -24,24 +24,32 @@ public class RiderForm {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
 
-//        JPanel panel = new JPanel();
-//        panel.setLayout(new BorderLayout());
-        JPanel panel = new JPanel(new GridLayout(2, 2)); // GridLayout with 2 rows and 2 columns
+        // Use BorderLayout for the main frame
+        frame.setLayout(new BorderLayout());
+
+        // Panel for tables with GridLayout (1 row, 2 columns)
+        JPanel tablePanel = new JPanel(new GridLayout(1, 2));
 
         // Create a table model for orders
         tableModel = new DefaultTableModel(new Object[]{"Order No.", "Customer", "Items", "Type", "State"}, 0);
         orderTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(orderTable);
-        panel.add(scrollPane);
-//        panel.add(scrollPane, BorderLayout.WEST);
+        tablePanel.add(scrollPane);
 
         // Create a table model for on-the-way orders
         onTheWayOrderTableModel = new DefaultTableModel(new Object[]{"Order No.", "Customer", "Items", "Type", "State"}, 0);
         onTheWayOrderTable = new JTable(onTheWayOrderTableModel);
         JScrollPane onTheWayScrollPane = new JScrollPane(onTheWayOrderTable);
-        panel.add(onTheWayScrollPane);
+        tablePanel.add(onTheWayScrollPane);
 
-// Create a button to pursue delivery
+        // Add the table panel to the center of the frame
+        frame.add(tablePanel, BorderLayout.CENTER);
+
+        // Panel for buttons with GridLayout (1 row, 2 columns)
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
+        buttonPanel.setPreferredSize(new Dimension(600, 50));
+
+        // Create a button to pursue delivery
         pursueDeliveryButton = new JButton("Pursue Delivery");
         pursueDeliveryButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -57,11 +65,10 @@ public class RiderForm {
                 }
             }
         });
-        panel.add(pursueDeliveryButton);
+        buttonPanel.add(pursueDeliveryButton);
 
         // Create button to mark as delivered
         deliveredButton = new JButton("Delivered");
-
         deliveredButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 // Get the selected row
@@ -69,19 +76,18 @@ public class RiderForm {
                 if (selectedRow != -1) {
                     // Get the order number from the selected row
                     int orderNo = (int) onTheWayOrderTable.getValueAt(selectedRow, 0);
-                    // Update the order status to "ON_THE_WAY" in the database
+                    // Update the order status to "DELIVERED" in the database
                     updateOrderState(orderNo, "DELIVERED");
                 } else {
-                    JOptionPane.showMessageDialog(frame, "Please select an order to pursue delivery.");
+                    JOptionPane.showMessageDialog(frame, "Please select an order to mark as delivered.");
                 }
             }
         });
+        buttonPanel.add(deliveredButton);
 
-        panel.add(deliveredButton);
+        // Add the button panel to the south of the frame
+        frame.add(buttonPanel, BorderLayout.SOUTH);
 
-
-
-        frame.add(panel);
         frame.setVisible(true);
 
         // Fetch READY orders from the database when the form is initialized
