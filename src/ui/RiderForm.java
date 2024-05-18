@@ -1,15 +1,14 @@
 package ui;
 
 import user.Driver;
-import order.Order;
+
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class RiderForm {
     private JFrame frame;
@@ -171,28 +170,4 @@ public class RiderForm {
         }
     }
 
-    // Method to update the order status to DELIVERED
-    private void updateOrderStateToDelivered(int orderNo) {
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db")) {
-            // Construct the SQL update statement
-            String updateQuery = "UPDATE orders SET state = 'DELIVERED' WHERE order_no = ?";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
-                // Set the parameter for the update statement
-                preparedStatement.setInt(1, orderNo);
-
-                // Execute the update statement
-                int rowsUpdated = preparedStatement.executeUpdate();
-                if (rowsUpdated > 0) {
-                    System.out.println("Order state updated to DELIVERED successfully.");
-                    // Remove the order from the ON_THE_WAY order table
-                    onTheWayOrderTableModel.removeRow(onTheWayOrderTable.getSelectedRow());
-                } else {
-                    System.out.println("Failed to update order state to DELIVERED.");
-                }
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(frame, "Error updating order state to DELIVERED in database!");
-        }
-    }
 }

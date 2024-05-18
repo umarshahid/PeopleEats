@@ -1,5 +1,10 @@
 package ui;
 
+import restaurant.Restaurant;
+import user.Driver;
+import user.User;
+import user.UserType;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,9 +37,6 @@ public class LoginForm extends JFrame {
                 boolean authenticated = authenticateUser(username, password);
                 if (authenticated) {
                     JOptionPane.showMessageDialog(LoginForm.this, "Login successful!");
-                    // Open main application window
-                    // Replace this with the appropriate action
-                    openMainWindow();
                 } else {
                     JOptionPane.showMessageDialog(LoginForm.this, "Invalid username or password. Please try again.");
                 }
@@ -60,7 +62,7 @@ public class LoginForm extends JFrame {
     }
 
     private void signupUser(String username, String password, String role) {
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:user_database.db")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db")) {
             String query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, username);
@@ -82,7 +84,7 @@ public class LoginForm extends JFrame {
 
     private boolean authenticateUser(String username, String password) {
         // Implement authentication logic here by querying the database
-        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:user_database.db")) {
+        try (Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db")) {
             String query = "SELECT * FROM users WHERE username = ? AND password = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
                 preparedStatement.setString(1, username);
@@ -119,18 +121,24 @@ public class LoginForm extends JFrame {
         // Implement opening the customer form
         // For demonstration purposes, show a simple message dialog
         JOptionPane.showMessageDialog(this, "Opening customer form...");
+        User customer = new User("Customer", "123456", UserType.CUSTOMER);
+        new CustomerForm(customer);
     }
 
     private void openRestaurantForm() {
         // Implement opening the restaurant form
         // For demonstration purposes, show a simple message dialog
         JOptionPane.showMessageDialog(this, "Opening restaurant form...");
+        Restaurant restaurant = new Restaurant("Restaurant", "Location");
+        new RestaurantForm(restaurant);
     }
 
     private void openRiderForm() {
         // Implement opening the rider form
         // For demonstration purposes, show a simple message dialog
         JOptionPane.showMessageDialog(this, "Opening rider form...");
+        user.Driver rider = new Driver("Rider");
+        new RiderForm(rider);
     }
 
 
@@ -179,9 +187,5 @@ public class LoginForm extends JFrame {
         signUpFrame.setVisible(true);
     }
 
-
-    public static void main(String[] args) {
-        new LoginForm();
-    }
 }
 

@@ -1602,51 +1602,61 @@
     <table id="559" parent="192" name="sqlite_master">
       <System>1</System>
     </table>
-    <column id="560" parent="558" name="customer">
+    <table id="560" parent="192" name="users"/>
+    <column id="561" parent="558" name="customer">
       <Position>1</Position>
     </column>
-    <column id="561" parent="558" name="item">
+    <column id="562" parent="558" name="item">
       <Position>2</Position>
     </column>
-    <column id="562" parent="558" name="price">
+    <column id="563" parent="558" name="price">
       <Position>3</Position>
     </column>
-    <column id="563" parent="558" name="order_type">
+    <column id="564" parent="558" name="order_type">
       <DasType>TEXT|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="564" parent="558" name="state">
+    <column id="565" parent="558" name="state">
       <DasType>TEXT|0s</DasType>
       <Position>5</Position>
     </column>
-    <column id="565" parent="558" name="order_no">
+    <column id="566" parent="558" name="order_no">
       <DasType>integer|0s</DasType>
       <NotNull>1</NotNull>
       <Position>6</Position>
     </column>
-    <key id="566" parent="558" name="orders_no">
+    <key id="567" parent="558" name="orders_no">
       <ColNames>order_no</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="567" parent="559" name="type">
+    <column id="568" parent="559" name="type">
       <DasType>TEXT|0s</DasType>
       <Position>1</Position>
     </column>
-    <column id="568" parent="559" name="name">
+    <column id="569" parent="559" name="name">
       <DasType>TEXT|0s</DasType>
       <Position>2</Position>
     </column>
-    <column id="569" parent="559" name="tbl_name">
+    <column id="570" parent="559" name="tbl_name">
       <DasType>TEXT|0s</DasType>
       <Position>3</Position>
     </column>
-    <column id="570" parent="559" name="rootpage">
+    <column id="571" parent="559" name="rootpage">
       <DasType>INT|0s</DasType>
       <Position>4</Position>
     </column>
-    <column id="571" parent="559" name="sql">
+    <column id="572" parent="559" name="sql">
       <DasType>TEXT|0s</DasType>
       <Position>5</Position>
+    </column>
+    <column id="573" parent="560" name="username">
+      <Position>1</Position>
+    </column>
+    <column id="574" parent="560" name="password">
+      <Position>2</Position>
+    </column>
+    <column id="575" parent="560" name="role">
+      <Position>3</Position>
     </column>
   </database-model>
 </dataSource>
