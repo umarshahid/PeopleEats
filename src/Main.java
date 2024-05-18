@@ -1,4 +1,3 @@
-import models.ConnectDB;
 import restaurant.Restaurant;
 import ui.CustomerForm;
 import ui.RestaurantForm;
@@ -8,7 +7,6 @@ import user.User;
 import user.UserType;
 
 import javax.swing.*;
-import java.sql.Connection;
 
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.

@@ -93,7 +93,20 @@ public class CustomerForm {
             preparedStatement.setDouble(3, order.getItems().get(0).getPrice()); // Assuming only one item for simplicity
             String deliveryType = (order.getType() == OrderType.DELIVERY) ? "DELIVERY" : "NOT DELIVERY";
             preparedStatement.setString(4, deliveryType); // Assuming only one item for simplicity
-            String orderState = (order.getState() == OrderState.PREPARING) ? "PREPARING" : "READY";
+//            String orderState = (order.getState() == OrderState.PREPARING) ? "PREPARING" : "READY";
+            String orderState = "";
+            if (order.getState() == OrderState.PREPARING) {
+                orderState ="PREPARING";
+            }
+            else if (order.getState() == OrderState.READY) {
+                orderState = "READY";
+            }
+            else if (order.getState() == OrderState.ON_THE_WAY) {
+                orderState = "ON_THE_WAY";
+            }
+            else if (order.getState() == OrderState.DELIVERED) {
+                orderState = "DELIVERED";
+            }
             preparedStatement.setString(5, orderState); // Assuming only one item for simplicity
 
             // Execute the PreparedStatement

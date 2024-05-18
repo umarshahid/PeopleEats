@@ -13,6 +13,7 @@ public class Order {
     private User user;
     private Restaurant restaurant;
     private List<MenuItems> items;
+    private int orderNo;
     private OrderType type;
     private OrderState state;
     private String paymentMethod;
@@ -59,5 +60,13 @@ public class Order {
             total += item.getPrice();
         }
         return total;
+    }
+
+    public void setOrderNo(int orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public int getOrderNo() {
+        return orderNo;
     }
 }

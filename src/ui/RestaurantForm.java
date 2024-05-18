@@ -34,7 +34,7 @@ public class RestaurantForm {
         panel.setLayout(new BorderLayout());
 
         // Create a table model for orders
-        tableModel = new DefaultTableModel(new Object[]{"Customer", "Items", "Price", "Type", "State"}, 0);
+        tableModel = new DefaultTableModel(new Object[]{"Customer", "Items", "Price", "Type", "State", "Order No."}, 0);
         orderTable = new JTable(tableModel);
         JScrollPane scrollPane = new JScrollPane(orderTable);
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -71,25 +71,30 @@ public class RestaurantForm {
         tableModel.setRowCount(0); // Clear existing rows
         for (Order order : orders) {
             // Add a row to the table for each order
-            tableModel.addRow(new Object[]{order.getUser().getUsername(), order.getItems().get(0).getName(), order.getItems().get(0).getPrice(), order.getType(), order.getState()});
+            tableModel.addRow(new Object[]{
+                    order.getUser().getUsername(),
+                    order.getItems().get(0).getName(),
+                    order.getItems().get(0).getPrice(),
+                    order.getType(),
+                    order.getState(),
+                    order.getOrderNo()
+            });
         }
     }
 
     private void updateOrderState(int[] selectedRows) {
         // Iterate over the selected rows and update the state of the corresponding orders in the database
         for (int row : selectedRows) {
-            String username = (String) tableModel.getValueAt(row, 0); // Assuming the username is in the first column
-            String item = (String) tableModel.getValueAt(row, 1);
-
+            Integer order_no = (Integer) tableModel.getValueAt(row, 5); // Assuming the username is in the first column
 
             try (Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db")) {
                 // Construct the SQL update statement
-                String updateQuery = "UPDATE orders SET state = ? WHERE customer = ? AND item = ?";
+                String updateQuery = "UPDATE orders SET state = ? WHERE order_no = ?";
                 try (PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
                     // Set the parameters for the update statement
                     preparedStatement.setString(1, "READY"); // Update the state to "Ready"
-                    preparedStatement.setString(2, username);
-                    preparedStatement.setString(3, item);
+                    preparedStatement.setInt(2, order_no);
+
 
                     // Execute the update statement
                     int rowsUpdated = preparedStatement.executeUpdate();
@@ -123,6 +128,7 @@ public class RestaurantForm {
                     String itemName = resultSet.getString("item");
                     double price = resultSet.getDouble("price");
                     String orderState = resultSet.getString("state");
+                    int orderNo = resultSet.getInt("order_no");
                     UserType userType = UserType.CUSTOMER; // Assuming all orders are for customers
                     OrderType orderType = OrderType.valueOf(resultSet.getString("order_type")); // Assuming order_type column in database
 
@@ -132,8 +138,21 @@ public class RestaurantForm {
 
                     // Create Order object and add it to the list
                     Order order = new Order(user, restaurant, orderType);
-                    OrderState state = (orderState.equals("PREPARING")) ? OrderState.PREPARING : OrderState.READY;
+                    OrderState state = null;
+                    if (orderState.equals("PREPARING")) {
+                        state =OrderState.PREPARING;
+                    }
+                    else if (orderState.equals("READY")) {
+                        state = OrderState.READY;
+                    }
+                    else if (orderState.equals("ON_THE_WAY")) {
+                        state = OrderState.ON_THE_WAY;
+                    }
+                    else if (orderState.equals("DELIVERED")) {
+                        state = OrderState.DELIVERED;
+                    }
                     order.setState(state);
+                    order.setOrderNo(orderNo);
                     order.addItem(menuItem);
                     orders.add(order);
                 }
