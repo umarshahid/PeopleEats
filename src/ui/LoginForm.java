@@ -62,6 +62,9 @@ public class LoginForm extends JFrame {
     }
 
     private void signupUser(String username, String password, String role) {
+        if (!ensureSqliteDriverLoaded()) {
+            return;
+        }
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db")) {
             String query = "INSERT INTO users (username, password, role) VALUES (?, ?, ?)";
             try (PreparedStatement preparedStatement = connection.prepareStatement(query)) {
@@ -83,6 +86,9 @@ public class LoginForm extends JFrame {
 
 
     private boolean authenticateUser(String username, String password) {
+        if (!ensureSqliteDriverLoaded()) {
+            return false;
+        }
         // Implement authentication logic here by querying the database
         try (Connection connection = DriverManager.getConnection("jdbc:sqlite:orders_customer.db")) {
             String query = "SELECT * FROM users WHERE username = ? AND password = ?";
@@ -115,6 +121,20 @@ public class LoginForm extends JFrame {
             JOptionPane.showMessageDialog(LoginForm.this, "Error authenticating user!");
         }
         return false; // Authentication failed
+    }
+
+    private boolean ensureSqliteDriverLoaded() {
+        try {
+            Class.forName("org.sqlite.JDBC");
+            return true;
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(
+                    this,
+                    "SQLite JDBC driver not found.\n" +
+                            "Please place sqlite-jdbc.jar in a 'lib' folder and run again."
+            );
+            return false;
+        }
     }
 
     private void openCustomerForm() {

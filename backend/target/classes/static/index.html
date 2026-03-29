@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeopleEats Web</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="hero-text">
+        <p class="eyebrow">PeopleEats Web</p>
+        <h1>Order ahead, manage kitchens, and track deliveries.</h1>
+        <p class="subtitle">
+          This is the first web step. Sign up or log in to continue.
+        </p>
+      </div>
+      <div class="hero-panel">
+        <div class="panel">
+          <h2>Create account</h2>
+          <form id="signup-form">
+            <label>
+              Username
+              <input name="username" type="text" placeholder="e.g. sana" required />
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" placeholder="at least 6 chars" required />
+            </label>
+            <label>
+              Role
+              <select name="role">
+                <option value="customer">Customer</option>
+                <option value="restaurant">Restaurant</option>
+                <option value="rider">Rider</option>
+              </select>
+            </label>
+            <button type="submit">Sign up</button>
+          </form>
+          <p class="status" id="signup-status"></p>
+        </div>
+
+        <div class="panel">
+          <h2>Log in</h2>
+          <form id="login-form">
+            <label>
+              Username
+              <input name="username" type="text" placeholder="e.g. sana" required />
+            </label>
+            <label>
+              Password
+              <input name="password" type="password" placeholder="your password" required />
+            </label>
+            <button type="submit">Log in</button>
+          </form>
+          <p class="status" id="login-status"></p>
+        </div>
+      </div>
+    </section>
+
+    <section class="tips">
+      <div>
+        <h3>Next steps</h3>
+        <p>Use the API endpoints for orders, restaurants, and payments as you build the rest of the web UI.</p>
+      </div>
+      <div class="api-list">
+        <span>GET /api/restaurants</span>
+        <span>GET /api/restaurants/{id}/menu</span>
+        <span>POST /api/orders</span>
+        <span>GET /api/orders?state=READY</span>
+        <span>PATCH /api/orders/{orderNo}/state</span>
+        <span>POST /api/payments/credit-card</span>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

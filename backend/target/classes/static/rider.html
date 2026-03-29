@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeopleEats | Rider</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="dash-header">
+      <div>
+        <p class="eyebrow">Rider</p>
+        <h1 id="welcome-title">Rider Dashboard</h1>
+        <p class="subtitle">Pick up READY orders and deliver them.</p>
+      </div>
+      <div class="header-actions">
+        <a class="ghost-link" href="/">Back to login</a>
+      </div>
+    </section>
+
+    <section class="panel notice hidden" id="rider-notice">
+      <strong id="notice-title">New order available</strong>
+      <span id="notice-body">A new READY order just came in.</span>
+      <button id="notice-dismiss">Dismiss</button>
+    </section>
+
+    <section class="dash-grid">
+      <div class="panel">
+        <h3>Ready orders</h3>
+        <div class="row">
+          <button id="refresh-ready">Refresh</button>
+          <button id="take-order">Mark ON_THE_WAY</button>
+        </div>
+        <div id="ready-orders" class="list muted">No orders loaded yet.</div>
+      </div>
+      <div class="panel">
+        <h3>On the way</h3>
+        <div class="row">
+          <button id="refresh-ontheway">Refresh</button>
+          <button id="deliver-order">Mark DELIVERED</button>
+        </div>
+        <div id="ontheway-orders" class="list muted">No orders loaded yet.</div>
+      </div>
+    </section>
+    <p class="status" id="order-status"></p>
+  </main>
+  <script src="rider.js"></script>
+</body>
+</html>

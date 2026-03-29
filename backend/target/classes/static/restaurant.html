@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeopleEats | Restaurant</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="dash-header">
+      <div>
+        <p class="eyebrow">Restaurant</p>
+        <h1 id="welcome-title">Restaurant Dashboard</h1>
+        <p class="subtitle">View and update incoming orders.</p>
+      </div>
+      <div class="header-actions">
+        <a class="ghost-link" href="/">Back to login</a>
+      </div>
+    </section>
+
+    <section class="dash-grid">
+      <div class="panel">
+        <h3>Preparing orders</h3>
+        <div class="row">
+          <button id="refresh-preparing">Refresh</button>
+          <button id="mark-ready">Mark selected READY</button>
+        </div>
+        <div id="preparing-orders" class="list muted">No PREPARING orders yet.</div>
+        <p class="status" id="order-status"></p>
+      </div>
+      <div class="panel">
+        <h3>All orders</h3>
+        <div class="row">
+          <button id="refresh-orders">Refresh</button>
+        </div>
+        <div id="orders" class="list muted">No orders loaded yet.</div>
+      </div>
+    </section>
+    <section class="panel notice hidden" id="restaurant-notice">
+      <strong id="restaurant-notice-title">Order delivered</strong>
+      <span id="restaurant-notice-body">Delivered orders will appear here.</span>
+      <button id="restaurant-notice-dismiss">Dismiss</button>
+    </section>
+  </main>
+  <script src="restaurant.js"></script>
+</body>
+</html>
