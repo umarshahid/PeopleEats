@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PeopleEats | Customer</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="page">
+    <section class="dash-header">
+      <div>
+        <p class="eyebrow">Customer</p>
+        <h1 id="welcome-title">Welcome</h1>
+        <p class="subtitle">Browse restaurants and place an order.</p>
+      </div>
+      <div class="header-actions">
+        <a class="ghost-link" href="/">Back to login</a>
+      </div>
+    </section>
+
+    <section class="dash-grid">
+      <div class="panel">
+        <h3>Available restaurants</h3>
+        <div id="restaurants" class="list"></div>
+      </div>
+
+      <div class="panel">
+        <h3>Menu</h3>
+        <div id="menu" class="list muted">Select a restaurant to see its menu.</div>
+      </div>
+
+      <div class="panel">
+        <h3>Place order</h3>
+        <form id="order-form" class="form">
+          <label>
+            Item
+            <input name="item" type="text" placeholder="Pick from menu" required />
+          </label>
+          <label>
+            Price
+            <input name="price" type="number" step="0.01" min="0" required />
+          </label>
+          <label>
+            Order type
+            <select name="orderType">
+              <option value="DELIVERY">Delivery</option>
+              <option value="NOT DELIVERY">Pickup</option>
+            </select>
+          </label>
+          <button type="submit">Place order</button>
+        </form>
+        <p class="status" id="order-status"></p>
+      </div>
+
+      <div class="panel">
+        <h3>My recent orders</h3>
+        <button id="refresh-orders">Refresh</button>
+        <div id="orders" class="list muted">No orders loaded yet.</div>
+      </div>
+    </section>
+
+    <section class="panel notice hidden" id="customer-notice">
+      <strong id="customer-notice-title">Order update</strong>
+      <span id="customer-notice-body">Your order status changed.</span>
+      <button id="customer-notice-dismiss">Dismiss</button>
+    </section>
+
+    <section class="panel hidden" id="feedback-panel">
+      <h3>Rate your rider</h3>
+      <form id="feedback-form" class="form">
+        <label>
+          Order number
+          <input name="orderNo" type="number" min="1" required />
+        </label>
+        <label>
+          Rider name
+          <input name="riderName" type="text" placeholder="Rider" required />
+        </label>
+        <label>
+          Rating
+          <select name="rating">
+            <option value="5">5 - Excellent</option>
+            <option value="4">4 - Good</option>
+            <option value="3">3 - OK</option>
+            <option value="2">2 - Poor</option>
+            <option value="1">1 - Bad</option>
+          </select>
+        </label>
+        <label>
+          Comment
+          <input name="comment" type="text" placeholder="Optional feedback" />
+        </label>
+        <button type="submit">Submit feedback</button>
+      </form>
+      <p class="status" id="feedback-status"></p>
+    </section>
+  </main>
+  <script src="customer.js"></script>
+</body>
+</html>

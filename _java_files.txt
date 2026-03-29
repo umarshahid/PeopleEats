@@ -1,0 +1,3 @@
+$ErrorActionPreference = 'Stop'
+if (!(Test-Path -LiteralPath .\out)) { New-Item -ItemType Directory -Path .\out | Out-Null }
+Get-ChildItem -Recurse -Filter *.java -Path .\src | ForEach-Object { $_.FullName }
